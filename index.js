@@ -2,6 +2,21 @@
 
 const twilio = require('twilio');
 const config = require('./config.json');
+// require firebase
+var admin = require('firebase-admin');
+
+var serviceAccount = require('./serviceAccountKey.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://stalgia-167017.firebaseio.com'
+  });
+
+// connect to firebase db
+var ref = admin.database().ref('/');
+
+
+
 
 const MessagingResponse = twilio.twiml.MessagingResponse;
 
@@ -32,8 +47,23 @@ exports.reply = (req, res) => {
   // Prepare a response to the SMS message
   const response = new MessagingResponse();
 
-  // Add text to the response
-  response.message('Thank you for your message!');
+  let userMessage = req.body.Body;
+
+  if(userMessage.indexOf('INTERVIEW') != -1){
+    response.message("Ready for your interview?");
+  }
+  else{
+    var data = {
+        text: req.body.Body,
+        number: req.body.From    
+    }
+    
+      ref.push(data);
+      // Add text to the response
+    
+      response.message("Thank you for your message!");
+  }
+
 
   // Send the response
   res
