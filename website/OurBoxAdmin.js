@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
 
-import { Box, Button } from 'grommet';
+import { Box, Button} from 'grommet';
 
 import { Checkmark, Close } from 'grommet-icons';
+
+import 'semantic-ui-css/semantic.min.css'
+
+import { Grid } from 'semantic-ui-react'
 
 
 import * as firebase from 'firebase'
@@ -13,6 +17,10 @@ const boxStyle = {
     width: "900px"
   };
 
+const buttonBox = {
+    width: "90%",
+}
+
   const textStyle = {
     fontSize: "2em",
     textIndent: "65px",
@@ -20,64 +28,67 @@ const boxStyle = {
     lineHeight: "1.6",
   };
 
-  const cancelStyle = {
-      float: "right",
-  }
 
 
 
+  
 class OurBoxAdmin extends Component {
 
     
+     // for approving 
 
-      // for approving 
-approve(newText, newKey) {
-
-
-
-    firebase.database().ref( "/" + newKey).set({
-        text: newText,
-        approved: 1,
-      });
-
-   
-};
-
-      // for disapproving 
-      disapprove(newText, newKey) {
+     /*
+ approve(newText, newKey) {
 
 
-
+        console.log("approve");
+    
         firebase.database().ref( "/" + newKey).set({
             text: newText,
-            approved: 0,
+            approved: 1,
           });
     
        
     };
     
-
-
+          // for disapproving 
+        disapprove(newText, newKey) {
+    
+            console.log("disapprove");
+    
+            firebase.database().ref( "/" + newKey).set({
+                text: newText,
+                approved: 0,
+              });        
+           
+        };
+        
+*/
     render() {
+
+      
 
 
 return <Box  alignContent="center" border={{ color: 'brand', size: 'large' }} style={boxStyle} pad='medium'>
     <div><p style={textStyle}> {this.props.text} </p></div>
-    <Box  direction="row"  align="center">
-<Button
-onClick={this.approve(this.props.text, this.props.ourKey)}
 
+
+    <Grid>
+    <Grid.Column floated='left' width={3}>
+    <Button
+alignSelf="start"
 icon={<Checkmark />}
 ></Button>
-<Button 
-
-onClick={this.disapprove(this.props.text, this.props.ourKey)}
-
-align="right"
+    </Grid.Column>
+    <Grid.Column floated='right' width={3}>
+    <Button 
+alignSelf="end"
 icon={<Close />}
 ></Button>
-    </Box>
-    </Box>
+    </Grid.Column>
+  </Grid>
+
+    </Box>    
 
     }
 
