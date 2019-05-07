@@ -1,94 +1,111 @@
+
 import React from 'react';
-import OurBoxAdmin from "./OurBoxAdmin.js";
+import ListItemsAdmin from "./ListItemsAdmin.js";
 
-import * as firebase from 'firebase'
-
-
-var database = firebase.database();
-
-var memories = database.ref();
+// load fire base
+import * as firebase from 'firebase';
 
 
-var listItems;
+class AllPosts extends React.Component {
 
-var textsToPost = [];
+  constructor() {
+    super();
+    this.state = {
+      // place holder values 
+      items: ["first", "second", "third"],
+      listToPost: ["Loading"],
+      idsListToPost: ["first", "second", "third"],
+      objectToPass: [],      
 
-var toMapArray = [];
+    }
+  }
 
-
-// triggers get data function
-function queryData(data) {
-
-    memories.on("value", gotData, errData);
-}
-
-// error message
-function errData(error) {
-    console.log("Something went wrong.");
-    console.log(error);
-}
+  // early in the React DOM life cycle
+  componentDidMount() {
 
 
-// retrieve data 
-function gotData(data) {
+    // gets database
+    const database = firebase.database();
+    // putting it into new database
+    var memories = database.ref();
+    
+    // get the data
+    memories.on('value', (snapshot) => {
 
-    var memories = data.val();
-    // Grab the keys to iterate over the object
-    var keys = Object.keys(memories);
+      // holds current snapshot of data 
+        let items = snapshot.val();
+        // creates newState array
+        let newState = [];
+        // for loop
+        for (let item in items) {
 
-    for (var i = 0; i < keys.length; i++) {
+          var isApproved = items[item].approved;
 
-        var key = keys[i];
-        // Look at each memory object!
-        var memory = memories[key];
+          
+          if (isApproved === undefined){
+            newState.push({
+              id: item,
+              postText: items[item].text,
+          });
+          }
+            
+
+        }
+      
+        // sets the state
+        this.setState({
+            items: newState,        
+        });
+
+        
+
+        // array to holds only the texts
+
+        var textsAndiDs = [];
+
+        var textAndiDObject = {
+
+            text: "",
+            id: "",
+        }
+
+        //var textsToPost = [];
+
+        //var idsToPost = [];
+
+        for (var i = 0; i < this.state.items.length; i++) {
+              
+
+            textAndiDObject.text = this.state.items[i].postText;
+
+            textAndiDObject.id = this.state.items[i].id;
+
+            console.log(textAndiDObject.id);
 
 
-        if (typeof memory.approved === 'undefined') {
-
-            if (typeof memory.text === "string") {
-
-                var memoryToMap = {
-                    text: memory.text,
-                    key: key,
-                }
-
-                // holds object of both
-                toMapArray.push(memoryToMap);
-
-                console.log("key: " + memoryToMap.key);
-
-                // on its way out
-                textsToPost.push(memory.text);
-
-            }
+            textsAndiDs[i] = textAndiDObject;
 
         }
 
+        this.setState({
+            objectToPass: textsAndiDs,
+      });        
 
-    }
 
-    console.log(toMapArray.text);
+    })
 
-
-    // understand how to fill two variables with the map function
-    listItems = toMapArray.map(post =>
-        <OurBoxAdmin text = {post.text} ourKey = {post.key}></OurBoxAdmin>
-    );
-
-    console.log(listItems);
 
 }
 
-class AllPostsAdmin extends React.Component {
-  componentDidMount () {
-    queryData();
-   }
-
   render(){
 
-    return <div>{listItems}</div>
+    return <div> <ListItemsAdmin  list={this.state.objectToPass} ></ListItemsAdmin>
+
+
+</div>
+
 
   }
 }
 
-export default AllPostsAdmin;
+export default AllPosts;
