@@ -1,0 +1,11 @@
+import React from 'react';
+import OurBoxAdmin from "./OurBoxAdmin.js";
+
+
+  function ListItemsAdmin(props) {
+    return props.list.map((post) =>
+    <OurBoxAdmin text={post}> </OurBoxAdmin>
+    ); 
+  }
+  
+  export default ListItemsAdmin;
