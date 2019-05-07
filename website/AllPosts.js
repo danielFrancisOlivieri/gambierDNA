@@ -1,6 +1,4 @@
-
 import React from 'react';
-import OurBox from "./OurBox.js";
 import ListItems from "./ListItems.js";
 
 // load fire base
