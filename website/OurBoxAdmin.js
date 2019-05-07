@@ -34,10 +34,26 @@ const buttonBox = {
   
 class OurBoxAdmin extends Component {
 
+  constructor(props) {
+    super();
+
+    this.state = {
+    text: props.text,
+    id: props.id,
+    }
+   
+    console.log(this.state);
+  }
+
+
+  testing(text) {
+  console.log("Yunkai");
+  console.log("button clicked " + text);
+  }
+  
+
     
      // for approving 
-
-     /*
  approve(newText, newKey) {
 
 
@@ -50,6 +66,8 @@ class OurBoxAdmin extends Component {
     
        
     };
+
+    
     
           // for disapproving 
         disapprove(newText, newKey) {
@@ -63,31 +81,30 @@ class OurBoxAdmin extends Component {
            
         };
         
-*/
-    render() {
 
-      
-
+    render() {    
 
 return <Box  alignContent="center" border={{ color: 'brand', size: 'large' }} style={boxStyle} pad='medium'>
     <div><p style={textStyle}> {this.props.text} </p></div>
 
+<br/>
 
     <Grid>
     <Grid.Column floated='left' width={3}>
     <Button
+   onClick={() => this.approve(this.state.text, this.state.id)}
 alignSelf="start"
 icon={<Checkmark />}
 ></Button>
     </Grid.Column>
     <Grid.Column floated='right' width={3}>
     <Button 
+    onClick={() => this.disapprove(this.state.text, this.state.id)}
 alignSelf="end"
 icon={<Close />}
 ></Button>
     </Grid.Column>
   </Grid>
-
     </Box>    
 
     }
